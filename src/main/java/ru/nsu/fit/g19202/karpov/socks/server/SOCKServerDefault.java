@@ -17,11 +17,10 @@ import java.util.Queue;
 import java.util.Set;
 
 public class SOCKServerDefault implements SOCKServer {
-    private Selector selector;
-    private InetSocketAddress addr;
-    private BiMap<SOCKSPartner, SOCKSPartner> conns;
-    private BiMap<SelectionKey, SOCKSChannel> channels;
-    private Queue<String> domainNames;
+    private final Selector selector;
+    private final BiMap<SOCKSPartner, SOCKSPartner> conns;
+    private final BiMap<SelectionKey, SOCKSChannel> channels;
+    private final Queue<String> domainNames;
 
     {
         conns = HashBiMap.create();
@@ -32,8 +31,7 @@ public class SOCKServerDefault implements SOCKServer {
     public SOCKServerDefault(InetSocketAddress addr) throws IOException, SOCKSException {
         try  {
             this.selector = Selector.open();
-            this.addr = addr;
-            addChannel("acceptor", this.addr);
+            addChannel("acceptor", addr);
             addChannel("dns");
         } catch (IOException | SOCKSException e) {
             try {

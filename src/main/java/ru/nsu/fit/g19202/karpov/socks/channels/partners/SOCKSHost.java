@@ -23,7 +23,7 @@ public class SOCKSHost extends SOCKSPartner {
     }
 
     @Override
-    public void perform() throws IOException, SOCKSException {
+    public void perform() throws IOException {
         passData();
     }
 }

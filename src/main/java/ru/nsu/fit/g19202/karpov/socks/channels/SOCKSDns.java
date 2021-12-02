@@ -19,10 +19,10 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 public class SOCKSDns implements SOCKSChannel {
-    private DatagramChannel datagramChannel;
-    private InetSocketAddress resolver;
+    private final DatagramChannel datagramChannel;
+    private final InetSocketAddress resolver;
     private SOCKServer server;
-    private ByteBuffer buf;
+    private final ByteBuffer buf;
     private static final Logger logger = Logger.getLogger(SOCKSClient.class.getName());
 
     public SOCKSDns() throws SOCKSException, IOException {
@@ -52,7 +52,7 @@ public class SOCKSDns implements SOCKSChannel {
     }
 
     @Override
-    public SelectionKey register(SOCKServer server) throws SOCKSException, IOException {
+    public SelectionKey register(SOCKServer server) throws IOException {
         this.server = server;
         return this.datagramChannel.register(server.getSelector(), SelectionKey.OP_READ | SelectionKey.OP_WRITE);
     }
@@ -94,8 +94,7 @@ public class SOCKSDns implements SOCKSChannel {
     private SOCKSClient getClientByHostName(Set<SOCKSChannel> channels, String hostName) {
         String processedHostName = hostName.substring(0, hostName.length() - 1);
         for (var channel : channels) {
-            if (channel instanceof SOCKSClient) {
-                SOCKSClient client = (SOCKSClient) channel;
+            if (channel instanceof SOCKSClient client) {
                 if (processedHostName.equals(client.getUnresolvedHostName())) {
                     return client;
                 }

@@ -9,17 +9,17 @@ import java.nio.channels.Selector;
 import java.util.Set;
 
 public interface SOCKServer extends AutoCloseable {
-    public SOCKSChannel addChannel(String channelType, Object... args) throws SOCKSException, IOException;
-    public void addConn(SOCKSPartner c1, SOCKSPartner c2);
-    public SOCKSPartner getPartner(SOCKSPartner channel);
-    public void removeChannel(SOCKSChannel channel);
-    public Set<SOCKSChannel> getChannels();
-    public void loop() throws SOCKSException, IOException;
-    public Selector getSelector();
+    SOCKSChannel addChannel(String channelType, Object... args) throws SOCKSException, IOException;
+    void addConn(SOCKSPartner c1, SOCKSPartner c2);
+    SOCKSPartner getPartner(SOCKSPartner channel);
+    void removeChannel(SOCKSChannel channel);
+    Set<SOCKSChannel> getChannels();
+    void loop() throws SOCKSException, IOException;
+    Selector getSelector();
 
     void addDomainName(String domainName);
 
-    public String popDomainName();
-    public boolean isReadable(SOCKSChannel channel);
-    public boolean isWritable(SOCKSChannel channel);
+    String popDomainName();
+    boolean isReadable(SOCKSChannel channel);
+    boolean isWritable(SOCKSChannel channel);
 }

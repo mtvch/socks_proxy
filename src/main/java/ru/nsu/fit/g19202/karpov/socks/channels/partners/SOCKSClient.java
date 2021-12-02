@@ -36,23 +36,12 @@ public class SOCKSClient extends SOCKSPartner {
     public void perform() {
         try {
             switch (this.state) {
-                case INIT:
-                    receiveGreetingIfReady();
-                    break;
-                case CLIENT_GREETED_SERVER:
-                    greetClientIfReady();
-                    break;
-                case SERVER_GREETED_CLIENT:
-                    processClientConnRequestIfReady();
-                    break;
-                case CLIENT_REQUESTED_CONN:
-                    grantConnIfReady();
-                    break;
-                case CONNECTED:
-                    passData();
-                    break;
-                default:
-                    throw new IllegalStateException();
+                case INIT -> receiveGreetingIfReady();
+                case CLIENT_GREETED_SERVER -> greetClientIfReady();
+                case SERVER_GREETED_CLIENT -> processClientConnRequestIfReady();
+                case CLIENT_REQUESTED_CONN -> grantConnIfReady();
+                case CONNECTED -> passData();
+                default -> throw new IllegalStateException();
             }
         } catch (Exception e) {
             this.server.removeChannel(this);
@@ -116,11 +105,11 @@ public class SOCKSClient extends SOCKSPartner {
 
      private void processAuthMethods(byte[] methods) throws IOException {
          boolean isNoAuthSupported = false;
-         for (byte m : methods) {
+         for (byte m : methods)
              if (m == 0x00) {
                  isNoAuthSupported = true;
+                 break;
              }
-         }
          if (!isNoAuthSupported) {
              logger.warning("Client does not support No Auth method");
              sendNoAuthIfReady();
@@ -184,7 +173,7 @@ public class SOCKSClient extends SOCKSPartner {
         return Arrays.toString(data);
      }
 
-     private void processClientConnRequestIfReady() throws SOCKSException, IOException {
+     private void processClientConnRequestIfReady() throws IOException {
         if (this.server.isReadable(this)) {
             this.buf.clear();
             int bytesRead = this.socketChannel.read(this.buf);
@@ -219,19 +208,15 @@ public class SOCKSClient extends SOCKSPartner {
          this.hostPort = (portBytes[0] << 8) | (portBytes[1] & 0xFF);
      }
 
-     public void processDestAddr() throws SOCKSException, IOException {
-         switch(this.buf.get()) {
-             case 0x01:
-                 processIPv4Addr();
-                 break;
-             case 0x03:
-                 processDomainNameAddr();
-                 break;
-             default:
+     public void processDestAddr() throws IOException {
+         switch (this.buf.get()) {
+             case 0x01 -> processIPv4Addr();
+             case 0x03 -> processDomainNameAddr();
+             default -> {
                  logger.warning("Address type not suported");
                  sendAddrTypeNotSupportedIfReady();
                  this.server.removeChannel(this);
-                 break;
+             }
          }
      }
 

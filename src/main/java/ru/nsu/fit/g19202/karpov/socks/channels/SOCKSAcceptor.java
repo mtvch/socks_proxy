@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 public class SOCKSAcceptor implements SOCKSChannel {
     private static final Logger logger = Logger.getLogger(SOCKSAcceptor.class.getName());
 
-    private ServerSocketChannel serverSocketChannel;
+    private final ServerSocketChannel serverSocketChannel;
     private SOCKServer server;
 
     public SOCKSAcceptor(InetSocketAddress addr) throws IOException {
