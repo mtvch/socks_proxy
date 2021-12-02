@@ -1,0 +1,1 @@
+SOCKServer=ru.nsu.fit.g19202.karpov.socks.server.SOCKServerDefault
